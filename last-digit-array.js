@@ -13,33 +13,41 @@ var lastDigit = function(arr) {
 }
 
 var lastTwoDigits = function(base, expo) {
-  var endsInOne = function(base, expo) {
-    return (base[0] * expo.slice(-1) + "1").slice(-2);
-  }
   base = base.toString();
   expo = expo.toString();
+  
+  function endsInOne(base, expo) {
+    return (base.toString().slice(-2, -1) * (expo % 10) + "1") % 100;
+  }
+
+  function endsInEvenN(base, expo) {
+    var rem = base / 2;
+    var oddPowerofXX24 = parseInt(expo / 10) % 2 == 0;
+    var ans = 2 ** expo % 10 * (oddPowerofXX24 ? 24 : 76) * lastTwoDigits(rem, expo);
+    return ans % 100;
+  }
+
   switch (base.slice(-1)) {
     case "0":
       return (10 ** expo.slice(-1));
     case "1":
       return endsInOne(base, expo);
     case "5":
-      var twos = base[0] % 2 == 1 && expo % 2 == 1 
+      return base[0] % 2 == 1 && expo % 2 == 1 
                     ? 75
                     : 25;
-      return (twoDigits);
     case "9":
-      var twos = (base ** expo % 2) * endsInOne(base * 2, parseInt(expo / 2));
+      var twos = (base ** (expo % 2)) * endsInOne(base ** 2, parseInt(expo / 2));
       return twos;
     case "3":
     case "7":
-      var twos = (base ** expo % 4) * endsInOne(base * 4, parseInt(expo / 4));
+      var twos = (base ** (expo % 4)) * endsInOne(base ** 4, parseInt(expo / 4));
       return twos;
     case "2":
     case "4":
     case "6":
     case "8":
-      return 11;
+      return endsInEvenN(base, expo);
   }
 }
 
@@ -75,3 +83,6 @@ console.log(lastTwoDigits(2, 543)); //08
 console.log(lastTwoDigits(62, 586)); //84
 console.log(lastTwoDigits(56, 287)); //76
 console.log(lastTwoDigits(33, 288)); //41
+console.log(lastTwoDigits(19, 266)); //81
+console.log(lastTwoDigits(71, 56747)); //91
+
