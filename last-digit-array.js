@@ -22,8 +22,8 @@ var lastTwoDigits = function(base, expo) {
 
   function endsInEvenN(base, expo) {
     var rem = base / 2;
-    var oddPowerofXX24 = parseInt(expo / 10) % 2 == 0;
-    var ans = 2 ** expo % 10 * (oddPowerofXX24 ? 24 : 76) * lastTwoDigits(rem, expo);
+    var oddPowerofXX24 = parseInt(expo / 10) % 2 == 1;
+    var ans = (2 ** (expo % 10)) * (oddPowerofXX24 ? 24 : 76) * lastTwoDigits(rem, expo);
     return ans % 100;
   }
 
@@ -37,12 +37,10 @@ var lastTwoDigits = function(base, expo) {
                     ? 75
                     : 25;
     case "9":
-      var twos = (base ** (expo % 2)) * endsInOne(base ** 2, parseInt(expo / 2));
-      return twos;
+      return (base ** (expo % 2)) * endsInOne(base ** 2, parseInt(expo / 2));
     case "3":
     case "7":
-      var twos = (base ** (expo % 4)) * endsInOne(base ** 4, parseInt(expo / 4));
-      return twos;
+      return (base ** (expo % 4)) * endsInOne(base ** 4, parseInt(expo / 4));
     case "2":
     case "4":
     case "6":
@@ -81,8 +79,12 @@ function largeModulus(str, mod) {
 console.log(lastTwoDigits(64, 236)); //36
 console.log(lastTwoDigits(2, 543)); //08
 console.log(lastTwoDigits(62, 586)); //84
-console.log(lastTwoDigits(56, 287)); //76
+console.log(lastTwoDigits(56, 283)); //16
 console.log(lastTwoDigits(33, 288)); //41
 console.log(lastTwoDigits(19, 266)); //81
 console.log(lastTwoDigits(71, 56747)); //91
+console.log(lastTwoDigits(125, 28)); //25
+console.log(lastTwoDigits(115, 35)); //75
+
+
 
