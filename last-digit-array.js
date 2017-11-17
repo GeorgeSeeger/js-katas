@@ -1,18 +1,21 @@
 var lastDigit = function(arr) {
   if (arr.length === 0) return 1;
   if (arr.length === 1) return arr[0].toString().slice(-1);
-  if (arr.length === 2) return lastDigitOfTwo(arr[0].toString(), arr[1].toString());
+  if (arr.length === 2) return lastTwoDigits(arr[0].toString(), arr[1].toString()).slice(-1);
   var reduceWith = function(twoDigits) {
+    console.log(arr);
     return lastDigit(arr.slice(0, arr.length - 2).concat([parseInt(twoDigits.toString().slice(-2))]));
   }
   
   
   var base = arr.slice(-2, -1).toString().slice(-2).padStart(2, "0");
   var expo = arr.slice(-1).toString().slice(-2);
+  console.log(base, expo);
   return reduceWith(lastTwoDigits(base, expo));
 }
 
 var lastTwoDigits = function(base, expo) {
+  if (base < 10 && expo < 10) return (base ** expo).toString().slice(-2).padStart(2, "0");
   base = base.toString();
   expo = expo.toString();
   
@@ -49,33 +52,6 @@ var lastTwoDigits = function(base, expo) {
   }
 }
 
-
-var lastDigitOfTwo = function(str1, str2){  
-  if (parseInt(str2) === 0 ) return 1;
-  var repeats = { "0" : [0],
-                  "1" : [1],
-                  "2" : [2,4,8,6],
-                  "3" : [3,9,7,1],
-                  "4" : [4,6],
-                  "5" : [5, 0],
-                  "6" : [6],
-                  "7" : [7,9,3,1],
-                  "8" : [8,4,2,6],
-                  "9" : [9, 1]};
-  
-  var lastNum = str1[str1.length - 1];
-
-  return repeats[lastNum][largeModulus(str2, parseInt(lastNum) - 1)];
-} 
-
-function largeModulus(str, mod) {
-  var res = 0;
-  for (var i = 0; i < str.length; i++) {
-    res = (res * 10 + parseInt(str[i])) % mod;
-  }
-  return res;
-}
-
 console.log(lastTwoDigits(64, 236)); //36
 console.log(lastTwoDigits(2, 543)); //08
 console.log(lastTwoDigits(62, 586)); //84
@@ -85,6 +61,14 @@ console.log(lastTwoDigits(19, 266)); //81
 console.log(lastTwoDigits(71, 56747)); //91
 console.log(lastTwoDigits(125, 28)); //25
 console.log(lastTwoDigits(115, 35)); //75
+
+console.log(lastTwoDigits(2, 0)); //01
+console.log(lastTwoDigits(2, 1)); //02
+console.log(lastTwoDigits(2, 2)); //04
+console.log(lastTwoDigits(2, 4)); //16
+
+
+
 
 
 
