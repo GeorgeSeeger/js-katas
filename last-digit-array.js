@@ -1,44 +1,41 @@
 var lastDigit = function(arr) {
   if (arr.length === 0) return 1;
-  if (arr.length === 1) return arr[0].toString().slice(-1);
-  if (arr.length === 2) return lastTwoDigits(arr[0].toString(), arr[1].toString()).slice(-1);
+  if (arr.length === 1) return arr[0] % 10;
+  if (arr.length === 2) return lastTwoDigits(arr[0].toString(), arr[1].toString()) % 10;
   var reduceWith = function(twoDigits) {
-    console.log(arr);
-    return lastDigit(arr.slice(0, arr.length - 2).concat([parseInt(twoDigits.toString().slice(-2))]));
+    return lastDigit(arr.slice(0, arr.length - 2).concat([twoDigits.toString().slice(-2)]));
   }
-  
-  
+    
   var base = arr.slice(-2, -1).toString().slice(-2).padStart(2, "0");
   var expo = arr.slice(-1).toString().slice(-2);
-  console.log(base, expo);
   return reduceWith(lastTwoDigits(base, expo));
 }
 
 var lastTwoDigits = function(base, expo) {
-  if (base < 10 && expo < 10) return (base ** expo).toString().slice(-2).padStart(2, "0");
   base = base.toString();
   expo = expo.toString();
+  if (expo.length == 1) return (base.slice(-2) ** expo).toString().slice(-2);
   
   function endsInOne(base, expo) {
-    return (base.toString().slice(-2, -1) * (expo % 10) + "1") % 100;
+    return (base.toString().slice(-2, -1) * (expo % 10) + "1").toString().slice(-2);
   }
 
   function endsInEvenN(base, expo) {
     var rem = base / 2;
     var oddPowerofXX24 = parseInt(expo / 10) % 2 == 1;
     var ans = (2 ** (expo % 10)) * (oddPowerofXX24 ? 24 : 76) * lastTwoDigits(rem, expo);
-    return ans % 100;
+    return ans.toString().slice(-2);
   }
 
   switch (base.slice(-1)) {
     case "0":
-      return (10 ** expo.slice(-1));
+      return (10 ** expo.slice(-1)).toString().slice(-2);
     case "1":
       return endsInOne(base, expo);
     case "5":
       return base[0] % 2 == 1 && expo % 2 == 1 
-                    ? 75
-                    : 25;
+                    ? "75"
+                    : "25";
     case "9":
       return (base ** (expo % 2)) * endsInOne(base ** 2, parseInt(expo / 2));
     case "3":
@@ -61,11 +58,16 @@ console.log(lastTwoDigits(19, 266)); //81
 console.log(lastTwoDigits(71, 56747)); //91
 console.log(lastTwoDigits(125, 28)); //25
 console.log(lastTwoDigits(115, 35)); //75
-
 console.log(lastTwoDigits(2, 0)); //01
 console.log(lastTwoDigits(2, 1)); //02
 console.log(lastTwoDigits(2, 2)); //04
 console.log(lastTwoDigits(2, 4)); //16
+console.log(lastTwoDigits(101, 2)); //02
+console.log(lastTwoDigits(2, 201)); //52
+console.log(lastTwoDigits(2, "01")); //52
+console.log(lastTwoDigits(12, "10")); //24
+
+
 
 
 
