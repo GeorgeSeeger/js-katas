@@ -49,7 +49,10 @@ class Molecule {
           bracketContent.push(c)
         } else {
           if (!isNaN(c)) {
-            var i = while(!isNaN)
+            while(string[i+1] && string[i+1].match("[0-9]")){
+              i += 1
+              c += string[i];
+            }
             if (last instanceof Molecule) {
               last.multiply(c - 1)
               this.add(last);
@@ -62,7 +65,7 @@ class Molecule {
               last = c;
               var nextChar = string[i+1] && string[i+1].match("[a-z]") ? string[i+1] : "";
               last += nextChar;
-              this.formula[last] = 1;
+              this.formula[last] = (this.formula[last] || 0 ) + 1;
             }
           }
         }
@@ -71,4 +74,4 @@ class Molecule {
   }
 }
 
-console.log(parseMolecule("C6H1206"));
+console.log(parseMolecule("(C5H5)Fe(CO)2CH3"));
