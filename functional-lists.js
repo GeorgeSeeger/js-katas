@@ -25,8 +25,9 @@ ListNode.prototype.tail = function() { return this.next;  };
 ListNode.prototype.length = function() { return 1 + this.next.length(); };
 ListNode.prototype.push = function(x) { return new ListNode(x, this) };
 ListNode.prototype.remove = function(x) {
-   if (this.value === x) { return this.next.isEmpty() ? new EmptyList() : new ListNode(this.tail().head(), this.tail().tail()); }
-   return new ListNode(this.value, this.next.remove(x));
+  if (this.value === x) { return this.next.isEmpty() ? new EmptyList() : new ListNode(this.next.head(), this.next.tail()); }
+//   if (this.next.head() === x) { return }
+  return new ListNode(this.value, this.next.remove(x));
 };
 ListNode.prototype.append = function(xs) {
   if (this.next.isEmpty()) {return new ListNode(this.value, xs);}
