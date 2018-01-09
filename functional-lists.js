@@ -25,11 +25,17 @@ ListNode.prototype.tail = function() { return this.next;  };
 ListNode.prototype.length = function() { return 1 + this.next.length(); };
 ListNode.prototype.push = function(x) { return new ListNode(x, this) };
 ListNode.prototype.remove = function(x) {
-  if (this.value === x) { return this.next.isEmpty() ? new EmptyList() : new ListNode(this.next.head(), this.next.tail()); }
-//   if (this.next.head() === x) { return }
-  return new ListNode(this.value, this.next.remove(x));
+    var node = this;  
+    if (node.head() === x) { return (node.tail().isEmpty() ? node.tail() : new ListNode(node.tail().head(), node.tail().tail().remove(x))); }
+    if (!node.tail().isEmpty() && node.tail().head() === x) { return new ListNode(node.head(), node.tail().tail().remove(x)) ;}
+    return this;
 };
 ListNode.prototype.append = function(xs) {
   if (this.next.isEmpty()) {return new ListNode(this.value, xs);}
   return new ListNode(this.value, this.next.append(xs));
 };
+
+var mt = new EmptyList();
+var l1 = mt.push(4).push(3).push(2).push(1);
+var l2 = l1.append(l1).append(l1);
+console.log(l2.remove(2).toString());
