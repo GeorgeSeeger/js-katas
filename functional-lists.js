@@ -26,16 +26,12 @@ ListNode.prototype.length = function() { return 1 + this.next.length(); };
 ListNode.prototype.push = function(x) { return new ListNode(x, this) };
 ListNode.prototype.remove = function(x) {
     var node = this;  
-    if (node.head() === x) { return (node.tail().isEmpty() ? node.tail() : new ListNode(node.tail().head(), node.tail().tail().remove(x))); }
+    if (node.head() === x) { return node.tail()we }
     if (!node.tail().isEmpty() && node.tail().head() === x) { return new ListNode(node.head(), node.tail().tail().remove(x)) ;}
-    return this;
+    var nextNode = this.next.remove(x);
+    return nextNode == this.next ? this : new ListNode(this.value, nextNode);
 };
 ListNode.prototype.append = function(xs) {
   if (this.next.isEmpty()) {return new ListNode(this.value, xs);}
   return new ListNode(this.value, this.next.append(xs));
 };
-
-var mt = new EmptyList();
-var l1 = mt.push(4).push(3).push(2).push(1);
-var l2 = l1.append(l1).append(l1);
-console.log(l2.remove(2).toString());
