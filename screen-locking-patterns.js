@@ -1,17 +1,26 @@
 function countPatternsFrom(firstDot, length) {
   if (length < 1 || length >= 10) { return 0; }
-  var patterns = [ new Pattern().connect(firstDot) ]
-  for (var i = 1; i < length; i++) {
-    patterns = patterns.map(function(p) {
-      return p.available().map(function(d){
-        return p.connect(d);
-      });
-    }).reduce(function(acc, e) {return acc.concat(e); });
-  }
-  return patterns.length;
+  return patternsFrom(firstDot, length).length;
 }
 
-function P() {}
+var memo = {};
+function patternsFrom(firstDot, length) {
+  if (memo[firstDot]) {
+    var dotMemo = memo[firstDot];
+    if (dotMemo[length]) { return dotMemo[length]; }
+    var patterns = patternsFrom(firstDot, length - 1);
+    dotMemo[length] = patterns.map(function(p) {
+      return p.available().map(function(d){
+        return p.connect(d);
+      })
+    }).reduce(function(acc, a) { return acc.concat(a); });
+    return dotMemo[length];
+  } else {
+    memo[firstDot] = [[], [ new Pattern().connect(firstDot) ]];
+    return patternsFrom(firstDot, length);
+  }
+}
+
 function Pattern(selected) {
   this.selected =  selected || [];
   this.dots = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
@@ -20,18 +29,19 @@ function Pattern(selected) {
               : this.dots.filter(function(d){ return !selected.includes(d) });
 }
 
-Pattern.prototype = P
+Pattern.prototype = function P() {}
 Pattern.prototype.constructor = Pattern;
 Pattern.prototype.last = function() { return this.selected.slice(-1)[0]; }
 Pattern.prototype.connect = function(d) { return new Pattern(this.selected.concat([d])); }
+Pattern.prototype.debug = function() { return this.selected.join("-") + " | " + this.available().join(","); }
 Pattern.prototype.available = function() {
   var last = this.last();
   var cross = ['B','F','H','D'];
   var corners = {
     'A': [['B', 'C'], ['E', 'I'], ['D', 'G']],
     'C': [['F', 'I'], ['E', 'G'], ['B', 'A']],
-    'I': [['F', 'C'], ['E', 'A'], ['H', 'G']],
-    'G': [['H', 'I'], ['E', 'A'], ['D', 'A']]
+    'I': [['H', 'G'], ['E', 'A'], ['F', 'C']],
+    'G': [['D', 'A'], ['E', 'C'], ['H', 'I']]
   };
   var selected = this.selected;
   var dots = this.dots;
@@ -48,6 +58,3 @@ Pattern.prototype.available = function() {
     }); 
   }
 }
-
-
-  countPatternsFrom('D', 3)
