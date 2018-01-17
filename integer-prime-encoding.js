@@ -1,14 +1,20 @@
 function encode(n) {
-  
+  var p = primes.decompose(n);
+
+}
+
+function bracketEnconde(n) {
+
 }
 
 function decode(n) {
   
 }
 
+
 function Prime() {
     this.primes = [];
-    this.generatePrimes();
+    this.generatePrimes(1000000);
 }
 Prime.prototype.generatePrimes = function(limit) {
     var array = new Array(limit);
@@ -27,8 +33,15 @@ Prime.prototype.decompose = function(n) {
     var div = n;
     var ans = [];
     if (this.primes.includes(n)) return [n];
-    while (!this.primes.includes(div)) {
-        
+    for (var i = 0; i < this.primes.length; i++) {
+        while (div % this.primes[i] === 0) {
+            ans.push(this.primes[i]);
+            div /= this.primes[i];
+        }
+        if (this.primes[i] > div) break;
     }
+    return ans;
 }
-Prime.prototype.indexOf = function(n) { return this.primes.indexOf(n); }
+Prime.prototype.indexOf = function(n) { return this.primes.indexOf(n) + 1; }
+var primes = new Prime();
+Array.prototype.toBracketString = function() { return "[" + this.map(function(o) {return typeof o.toBracketString === undefined ? o.toString() : o.toBracketString() }) + "]" }
