@@ -1,10 +1,15 @@
 function encode(n) {
-  var p = primes.decompose(n);
-
+    var binary = bracketEncode(primes.decompose(n)).toBinaryString().split(',').join("").split("");
+    while (binary.pop() === "0") { }
+    return parseInt(binary.join("").slice(1), 2);
 }
 
-function bracketEnconde(n) {
-
+function bracketEncode(arr) {
+    return arr.map(function(i) {
+        return i === 2
+             ? []
+             : bracketEncode(primes.decompose(primes.indexOf(i)));
+    });
 }
 
 function decode(n) {
@@ -44,4 +49,6 @@ Prime.prototype.decompose = function(n) {
 }
 Prime.prototype.indexOf = function(n) { return this.primes.indexOf(n) + 1; }
 var primes = new Prime();
-Array.prototype.toBracketString = function() { return "[" + this.map(function(o) {return typeof o.toBracketString === undefined ? o.toString() : o.toBracketString() }) + "]" }
+Array.prototype.toBinaryString = function() { return "1" + this.map(function(o) {return typeof o.toBinaryString === undefined ? o.toString() : o.toBinaryString() }) + "0" }
+
+encode(46)
