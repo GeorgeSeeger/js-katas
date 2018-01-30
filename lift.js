@@ -1,7 +1,7 @@
 var theLift = function(queues, capacity) {
     var floorsVisited = [ 0 ];
     var lift = new Lift(queues, capacity);
-    while (lift.queues.some(function(q) { return q.length > 0; })) {
+    while (lift.queues.some(function(q) { return q.length > 0; }) || lift.holding.length != 0) {
         if (lift.isEmpty()) {
             var floor = lift.findClosestInSameDirection();
             if (!floor) { 
@@ -13,9 +13,14 @@ var theLift = function(queues, capacity) {
             floorsVisited.push(floor);
             lift.stopAtFloor();
         } else {
-            
+            lift.floor += lift.dir === 'up' ? 1 : -1;
+            if (lift.holding.some(function(p) { return p.destination == lift.floor; }) || lift.queues[lift.floor].some(function(p) { return p.location == lift.floor; })) {
+                floorsVisited.push(lift.floor);
+            }
+            lift.stopAtFloor();
         }
     }
+    floorsVisited.push(0);
     return floorsVisited;
   }
 function Person(location, destination) {
@@ -53,6 +58,7 @@ Lift.prototype.findFurthestInOppositeDirection = function() {
 }
 Lift.prototype.stopAtFloor = function() {
     var queue = this.queues[this.floor];
+    this.holding = this.holding.filter(function(p) { return p.destination !== this.floor; }, this);
     for(var i = 0; i < queue.length; i++){
         if (this.holding.length < this.capacity && queue[i].dir === this.dir) {
             this.holding.push(queue[i]);
@@ -61,3 +67,23 @@ Lift.prototype.stopAtFloor = function() {
     }
     this.queues[this.floor] = queue.filter(function(p) { return p; });    
 }
+
+theLift([
+    [], // G
+    [], // 1
+    [5,5,5], // 2
+    [], // 3
+    [], // 4
+    [], // 5
+    [], // 6
+  ], 5);
+
+theLift([
+    [], // G
+    [0], // 1
+    [], // 2
+    [], // 3
+    [2], // 4
+    [3], // 5
+    [], // 6
+  ], 5)
