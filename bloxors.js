@@ -5,10 +5,13 @@ function bloxSolver(arr){
             if (arr[i][j] === "B") bloxors.push(new Bloxor([[i, j]]));
         }
     }
-    while (!bloxors.some(b => b.isSolved(arr))) {
-        bloxors = flatten(bloxors.map(b => b.nextGeneration().filter(b => !b.isIllegal(arr))));
+    var solved
+    while (!(solved = bloxors.find(b => b.isSolved(arr)))) {
+        var nextGen = flatten(bloxors.map(b => b.nextGeneration().filter(b => !b.isIllegal(arr))));
+        var positions = nextGen.map(b => b.position);
+        bloxors = nextGen.filter((b, i, s) => positions.indexOf(b.position) === i);
     }
-    return bloxors.find(b => b.isSolved(arr)).moves.join("");
+    return solved.moves.join("");
 }
 
 function flatten(arrays) {
@@ -18,14 +21,12 @@ function flatten(arrays) {
 class Bloxor {
     constructor(coords, moves = []){
         this.coords = coords;
-        this.moves = moves;
+        this.moves = moves.slice(0);
         this.orientation = coords.length === 1 ? 'S' : coords[0][0] === coords[1][0] ? 'H' : 'V';
-        this.orientations = ['S', 'V', 'H'];
     }
 
     move(dir) {
-        var magnitude = "UR".includes(dir) ? 1 : -1;        
-        moves = { 'U': 'VSH', 'L': 'HVS', 'D': 'VSH', 'R': 'HVS' };
+        var magnitude = "DR".includes(dir) ? 1 : -1;        
         if (this.orientation === "V") {
             if ("LR".includes(dir)) {this.coords.forEach(c => c[1] += magnitude)}
             else {
@@ -50,7 +51,7 @@ class Bloxor {
             loc[index] += magnitude
             this.coords = [temp, loc];
         }
-        this.orientation = moves[dir][this.orientations.indexOf(this.orientation)];
+        this.orientation = { 'U': 'VSH', 'L': 'HVS', 'D': 'VSH', 'R': 'HVS' }[dir]['SVH'.indexOf(this.orientation)];
         this.moves.push(dir);
         return this;
     }
@@ -60,10 +61,22 @@ class Bloxor {
     }
 
     isIllegal(board) {
-        return this.coords.map(c => board[c[0]][c[1]]).includes(0);
+        return this.coords.some(c => c[0] < 0 || c[0] >= board.length || c[1] < 0 || c[1] >= board[0].length) || this.coords.map(c => board[c[0]][c[1]]).includes(0);
     }
 
     isSolved(board) {
-        return this.orientation === "S" && board[this.coords[0][0], this.coords[0][1]] === "X"
+        return this.orientation === "S" && board[this.coords[0][0]][this.coords[0][1]] === "X"
+    }
+
+    get position() {
+        return this.coords.map(c => c.join()).join("|");
     }
 }
+
+var t = bloxSolver(['1110000000',
+'1B11110000',
+'1111111110',
+'0111111111',
+'0000011X11',
+'0000001110']);
+console.log(t);
