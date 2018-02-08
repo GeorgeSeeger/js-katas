@@ -6,10 +6,11 @@ function bloxSolver(arr){
         }
     }
     var solved
+    var positions = [bloxors[0].position]
     while (!(solved = bloxors.find(b => b.isSolved(arr)))) {
         var nextGen = flatten(bloxors.map(b => b.nextGeneration().filter(b => !b.isIllegal(arr))));
-        var positions = nextGen.map(b => b.position);
-        bloxors = nextGen.filter((b, i, s) => positions.indexOf(b.position) === i);
+        bloxors = nextGen.filter(b => positions.indexOf(b.position) ===  -1);
+        nextGen.forEach(b => positions.push(b.position));
     }
     return solved.moves.join("");
 }
@@ -44,7 +45,7 @@ class Bloxor {
              }
         }
         if (this.orientation === "S") {
-            var loc = this.coords[0];
+            var loc = this.coords[0].slice(0);
             var index = "UD".includes(dir) ? 0 : 1;
             loc[index] += magnitude;
             var temp = [loc[0], loc[1]];
