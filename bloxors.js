@@ -8,7 +8,7 @@ function bloxSolver(arr){
     var solved
     var positions = [bloxors[0].position]
     while (!(solved = bloxors.find(b => b.isSolved(arr)))) {
-        var nextGen = flatten(bloxors.map(b => b.nextGeneration().filter(b => !b.isIllegal(arr))));
+        var nextGen = flatten(bloxors.map(b => b.nextGeneration().filter(bl => !bl.isIllegal(arr))));
         bloxors = nextGen.filter(b => positions.indexOf(b.position) ===  -1);
         nextGen.forEach(b => positions.push(b.position));
     }
@@ -62,7 +62,7 @@ class Bloxor {
     }
 
     isIllegal(board) {
-        return this.coords.some(c => c[0] < 0 || c[0] >= board.length || c[1] < 0 || c[1] >= board[0].length) || this.coords.map(c => board[c[0]][c[1]]).includes(0);
+        return this.coords.some(c => c[0] < 0 || c[0] >= board.length || c[1] < 0 || c[1] >= board[0].length) || this.coords.map(c => board[c[0]][c[1]]).includes("0");
     }
 
     isSolved(board) {
@@ -79,5 +79,5 @@ var t = bloxSolver(['1110000000',
 '1111111110',
 '0111111111',
 '0000011X11',
-'0000001110']);
+'0000001110'])
 console.log(t);
