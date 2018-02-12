@@ -10,7 +10,7 @@ function bloxSolver(arr){
     while (!(solved = bloxors.find(b => b.isSolved(arr)))) {
         var nextGen = flatten(bloxors.map(b => b.nextGeneration().filter(bl => !bl.isIllegal(arr))));
         bloxors = nextGen.filter(b => positions.indexOf(b.position) ===  -1);
-        nextGen.forEach(b => positions.push(b.position));
+        bloxors.forEach(b => positions.push(b.position));
     }
     return solved.moves.join("");
 }
@@ -21,7 +21,7 @@ function flatten(arrays) {
 
 class Bloxor {
     constructor(coords, moves = []){
-        this.coords = coords;
+        this.coords = coords.map(c => c.slice(0));
         this.moves = moves.slice(0);
         this.orientation = coords.length === 1 ? 'S' : coords[0][0] === coords[1][0] ? 'H' : 'V';
     }
