@@ -25,7 +25,7 @@ function plantsAndZombies(lawn,zombiesInfo){
         zombies = zombies.filter(z => !z.isDead());
         if (zombies.length === 0) return null;
 
-        debugPrint(lawn, plants, zombies, shots);
+        //debugPrint(lawn, plants, zombies, shots);
     }
 }
 
@@ -34,7 +34,7 @@ function debugPrint(lawn, plants, zombies, shots) {
     shots.forEach(shot => shot.forEach(s => p[s.y][s.x] = "x"));
     zombies.filter(z => z.position !== undefined).forEach(z => p[z.position.y][z.position.x] = "Z");
     plants.forEach(pl => p[pl.position.y][pl.position.x] = pl.type);
-    console.log(p.map(s => s.join("")).join("\n"));
+    console.log(p.map(s => s.join("")).join(",\n"));
     console.log(new Array(lawn[0].length).fill("-").join(""));
 }
 
@@ -62,7 +62,7 @@ class Zombie {
             return;
         }
         if (this.delay == 0 && this.position == undefined){
-            this.position = new Coord(this.boardLimit + 1, this.row);
+            this.position = new Coord(this.boardLimit, this.row);
         }
         this.position.x--;
     }
@@ -81,10 +81,10 @@ class Plant {
     }
 
     shotsLandOn(board) {
-        var lineCoords = new Array(board[0].length - this.position.x - 1).fill(0).map((a, i) => new Coord(i + 1, this.position.y), this);
+        var lineCoords = new Array(board[0].length - this.position.x - 1).fill(0).map((a, i) => new Coord(this.position.x + i + 1, this.position.y), this);
         if (this.isStraightShooter) {
             var shots = [lineCoords]
-            for (var i = 0; i < this.damage; i++) {
+            for (var i = 1; i < this.damage; i++) {
                 shots.push(lineCoords.slice(0));
             }
             return shots;
