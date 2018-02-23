@@ -4,7 +4,7 @@ function plantsAndZombies(lawn,zombiesInfo){
          for (var j = 0; j < lawn[0].length; j++)
              if (lawn[i][j] !== ' ') plants.push(new Plant(lawn[i][j], j, i));
     var zombies = zombiesInfo.map(info => new Zombie(info, lawn[0].length));
-    var turns = 0
+    var turns = -1;
     while (true) {
         turns++;
 
@@ -89,8 +89,10 @@ class Plant {
             }
             return shots;
         } 
-        var lowerDiagonal = new Array(Math.abs(board.length - this.position.y - 1)).fill(0).map((a, i) => new Coord(this.position.x + i + 1, this.position.y + i + 1), this);
-        var upperDiagonal = new Array(this.position.y).fill(0).map((a, i) => new Coord(this.position.x + i + 1, this.position.y - i - 1), this);
+        var getMin = (x, y) => Math.min(board.length - x - 1, y);
+        //here
+        var lowerDiagonal = new Array(getMin(this.position.x, board.length - this.position.y - 1)).fill(0).map((a, i) => new Coord(this.position.x + i + 1, this.position.y + i + 1), this);
+        var upperDiagonal = new Array(getMin(this.position.x, this.position.y)).fill(0).map((a, i) => new Coord(this.position.x + i + 1, this.position.y - i - 1), this);
         return [upperDiagonal, lineCoords, lowerDiagonal];
     } 
 }
