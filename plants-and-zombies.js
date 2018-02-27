@@ -25,12 +25,12 @@ function plantsAndZombies(lawn,zombiesInfo){
         zombies = zombies.filter(z => !z.isDead());
         if (zombies.length === 0) return null;
 
-        //debugPrint(lawn, plants, zombies, shots);
+        debugPrint(lawn, plants, zombies, shots);
     }
 }
 
 function debugPrint(lawn, plants, zombies, shots) {
-    var p = lawn.map(s => s.split(""));
+    var p = lawn.map(s => new Array(lawn[0].length).fill(" "));
     shots.forEach(shot => shot.forEach(s => p[s.y][s.x] = "x"));
     zombies.filter(z => z.position !== undefined).forEach(z => p[z.position.y][z.position.x] = "Z");
     plants.forEach(pl => p[pl.position.y][pl.position.x] = pl.type);
@@ -105,11 +105,11 @@ plantsAndZombies([
     '2 3     '],
 [[0,4,28],[1,1,6],[2,0,10],[2,4,15],[3,2,16],[3,3,13]]) //10
 
-plantsAndZombies([
-    '12        ',
-    '3S        ',
-    '2S        ',
-    '1S        ',
-    '2         ',
-    '3         '],
-[[0,0,18],[2,3,12],[2,5,25],[4,2,21],[6,1,35],[6,4,9],[8,0,22],[8,1,8],[8,2,17],[10,3,18],[11,0,15],[12,4,21]]) //12
+// plantsAndZombies([
+//     '12        ',
+//     '3S        ',
+//     '2S        ',
+//     '1S        ',
+//     '2         ',
+//     '3         '],
+// [[0,0,18],[2,3,12],[2,5,25],[4,2,21],[6,1,35],[6,4,9],[8,0,22],[8,1,8],[8,2,17],[10,3,18],[11,0,15],[12,4,21]]) //12
